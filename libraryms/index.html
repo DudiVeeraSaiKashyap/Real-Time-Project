@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LibraryMS — College Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── SIDEBAR ─────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">📖</div>
+      <div>
+        <div class="sb-logo-name">LibraryMS</div>
+        <div class="sb-logo-sub">College Library</div>
+      </div>
+    </div>
+    <nav class="sb-nav" id="sb-nav"></nav>
+    <div class="sb-user" id="sb-user"></div>
+  </aside>
+
+  <!-- ── MAIN ───────────────────────────────────── -->
+  <div class="main-content" id="main-content">
+    <div class="topbar" id="topbar" style="display:none">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-date" id="topbar-date"></div>
+    </div>
+    <div id="pages">
+
+      <!-- HOME -->
+      <div class="page active" id="page-home">
+        <div class="home-wrap">
+          <div class="home-glow g1"></div>
+          <div class="home-glow g2"></div>
+          <div class="home-hero">
+            <div class="home-icon">📚</div>
+            <h1 class="home-title">College Library<br><span class="gradient-text">Management System</span></h1>
+            <p class="home-sub">One Platform for All Your Library Needs.</p>
+          </div>
+          <div class="home-cards">
+            <div class="home-card" onclick="goTo('student-login')">
+              <div class="hc-icon">🎓</div>
+              <div class="hc-title">Student Login</div>
+              <div class="hc-desc">Access books, catalog & borrow history</div>
+              <button class="btn btn-primary" style="margin-top:14px;width:100%;justify-content:center">Login as Student</button>
+            </div>
+            <div class="home-card admin-card" onclick="goTo('admin-login')">
+              <div class="hc-icon">🔑</div>
+              <div class="hc-title">Admin Login</div>
+              <div class="hc-desc">Manage books, students & library ops</div>
+              <button class="btn btn-admin" style="margin-top:14px;width:100%;justify-content:center">Login as Admin</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- STUDENT LOGIN -->
+      <div class="page" id="page-student-login">
+        <div class="login-wrap">
+          <div class="login-glow" style="background:var(--accent)"></div>
+          <div class="login-card">
+            <div class="login-head">
+              <div class="sb-logo-icon">📖</div>
+              <div><div class="sb-logo-name">LibraryMS</div><div class="sb-logo-sub">Student Portal</div></div>
+            </div>
+            <h2 class="login-title">Student Login 🎓</h2>
+            <p class="login-sub">Enter your Student ID and password</p>
+            <div id="student-login-err" class="alert alert-err" style="display:none"></div>
+            <div class="form-group">
+              <label>Student ID</label>
+              <input id="sl-id" type="text" placeholder="e.g. S2023001"/>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input id="sl-pw" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')studentLogin()"/>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="studentLogin()">Login</button>
+            <div style="text-align:center;margin-top:16px">
+              <button class="btn btn-ghost btn-sm" onclick="goTo('home')">← Back to Home</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN LOGIN -->
+      <div class="page" id="page-admin-login">
+        <div class="login-wrap">
+          <div class="login-glow" style="background:var(--admin)"></div>
+          <div class="login-card" style="border-color:rgba(247,145,79,.25)">
+            <div class="login-head">
+              <div class="sb-logo-icon" style="background:var(--admin)">🔑</div>
+              <div><div class="sb-logo-name">LibraryMS</div><div class="sb-logo-sub">Admin Panel</div></div>
+            </div>
+            <h2 class="login-title">Admin Login 🔑</h2>
+            <p class="login-sub">Librarian access only</p>
+            <div id="admin-login-err" class="alert alert-err" style="display:none"></div>
+            <div class="form-group">
+              <label>Username</label>
+              <input id="al-id" type="text" placeholder="admin"/>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input id="al-pw" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()"/>
+            </div>
+            <button class="btn btn-admin btn-full" onclick="adminLogin()">Login as Admin</button>
+            <div style="text-align:center;margin-top:16px">
+              <button class="btn btn-ghost btn-sm" onclick="goTo('home')">← Back to Home</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUDENT DASHBOARD -->
+      <div class="page" id="page-student-dashboard">
+        <div class="page-header">
+          <div class="page-title" id="s-dash-greeting">Welcome!</div>
+          <div class="page-sub" id="s-dash-sub"></div>
+        </div>
+        <div class="stat-grid" id="s-stat-grid"></div>
+        <div class="two-col">
+          <div class="card clickable" onclick="goTo('catalog')">
+            <div style="font-size:32px;margin-bottom:10px">🔍</div>
+            <div style="font-weight:700;margin-bottom:4px">Browse Catalog</div>
+            <div class="text-muted">Search and filter all available books</div>
+          </div>
+          <div class="card clickable" onclick="goTo('mybooks')">
+            <div style="font-size:32px;margin-bottom:10px">📋</div>
+            <div style="font-weight:700;margin-bottom:4px">My Books</div>
+            <div class="text-muted">View borrowed books & request extensions</div>
+          </div>
+        </div>
+        <div class="section-hdr"><span class="section-title">📌 Currently Borrowed</span></div>
+        <div class="table-wrap"><table><thead><tr><th>Book</th><th>Issue Date</th><th>Due Date</th><th>Status</th></tr></thead>
+        <tbody id="s-borrowed-tbody"></tbody></table></div>
+      </div>
+
+      <!-- BOOK CATALOG -->
+      <div class="page" id="page-catalog">
+        <div class="page-header">
+          <div class="page-title">Book Catalog 📚</div>
+          <div class="page-sub" id="catalog-count">Loading...</div>
+        </div>
+        <div class="search-row">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input id="catalog-search" type="text" placeholder="Search by title or author..." oninput="renderCatalog()"/>
+          </div>
+          <select id="catalog-subject" onchange="renderCatalog()">
+            <option value="">All Subjects</option>
+            <option>Programming</option><option>Mathematics</option>
+            <option>Electronics</option><option>Mechanical</option><option>Other</option>
+          </select>
+          <select id="catalog-branch" onchange="renderCatalog()">
+            <option value="">All Branches</option>
+            <option>CSE</option><option>ECE</option><option>EEE</option><option>Mechanical</option><option>Civil</option>
+          </select>
+        </div>
+        <div class="books-grid" id="catalog-grid"></div>
+      </div>
+
+      <!-- MY BOOKS -->
+      <div class="page" id="page-mybooks">
+        <div class="page-header">
+          <div class="page-title">My Books 📖</div>
+          <div class="page-sub">Books you've borrowed from the library</div>
+        </div>
+        <div id="mybooks-list"></div>
+      </div>
+
+      <!-- ADMIN DASHBOARD -->
+      <div class="page" id="page-admin-dashboard">
+        <div class="page-header">
+          <div class="page-title">Admin Dashboard 📊</div>
+          <div class="page-sub">Library overview and live statistics</div>
+        </div>
+        <div class="stat-grid" id="a-stat-grid"></div>
+        <div id="a-pending-alert"></div>
+        <div class="two-col">
+          <div class="card">
+            <div class="section-title" style="margin-bottom:14px">📖 Books by Subject</div>
+            <div id="chart-subject"></div>
+          </div>
+          <div class="card">
+            <div class="section-title" style="margin-bottom:14px">🏫 Books by Branch</div>
+            <div id="chart-branch"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANAGE BOOKS -->
+      <div class="page" id="page-manage-books">
+        <div class="page-header">
+          <div class="page-title">Manage Books 📚</div>
+          <div class="page-sub" id="manage-count"></div>
+        </div>
+        <div class="search-row">
+          <div class="search-wrap" style="flex:1">
+            <span class="search-icon">🔍</span>
+            <input id="manage-search" type="text" placeholder="Search books..." oninput="renderManageBooks()"/>
+          </div>
+          <button class="btn btn-primary" onclick="openBookModal('add')">+ Add Book</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Book ID</th><th>Title</th><th>Author</th><th>Subject</th><th>Branch</th><th>Total</th><th>Avail</th><th>QR</th><th>Actions</th></tr></thead>
+            <tbody id="manage-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BORROWED BOOKS (ADMIN) -->
+      <div class="page" id="page-borrowed">
+        <div class="page-header">
+          <div class="page-title">Borrowed Books 🔖</div>
+          <div class="page-sub">Track all issued books and manage extension requests</div>
+        </div>
+        <div class="search-row">
+          <button class="btn btn-ghost btn-sm filter-btn active" data-filter="all" onclick="setBorrowFilter('all',this)">All</button>
+          <button class="btn btn-ghost btn-sm filter-btn" data-filter="overdue" onclick="setBorrowFilter('overdue',this)">⚠ Overdue</button>
+          <button class="btn btn-ghost btn-sm filter-btn" data-filter="pending" onclick="setBorrowFilter('pending',this)">⏳ Pending Extensions <span id="pending-badge" class="sb-badge" style="position:static;margin-left:4px;display:none"></span></button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Student</th><th>Book</th><th>Issue Date</th><th>Due Date</th><th>Status</th><th>Extension</th></tr></thead>
+            <tbody id="borrowed-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- QR SCANNER -->
+      <div class="page" id="page-qr">
+        <div class="page-header">
+          <div class="page-title">QR Code Scanner 📷</div>
+          <div class="page-sub">Issue or return books by scanning or entering Book ID</div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="section-title" style="margin-bottom:16px">📷 Scan Book QR</div>
+            <div class="qr-box" id="qr-box">
+              <div class="qr-scan-line"></div>
+              <div style="color:var(--muted);font-size:13px;z-index:1;text-align:center">
+                <div style="font-size:38px">📷</div>
+                <div style="margin-top:8px">Camera preview area</div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-full" style="margin:14px 0" onclick="simulateScan()">▶ Simulate QR Scan</button>
+            <div class="divider-text">or enter manually</div>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <input id="qr-manual" type="text" placeholder="Book ID (e.g. B001)" style="flex:1"/>
+              <button class="btn btn-ghost" onclick="qrLookup()">🔍</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title" style="margin-bottom:16px">📋 Book Details</div>
+            <div id="qr-result">
+              <div style="text-align:center;padding:40px 0;color:var(--muted)">
+                <div style="font-size:40px;margin-bottom:10px">🔍</div>
+                Scan or enter a Book ID to see details
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pages -->
+  </div><!-- /main-content -->
+</div><!-- /app -->
+
+<!-- ── MODALS ───────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+
+  <!-- Book Modal -->
+  <div class="modal" id="book-modal">
+    <div class="modal-hdr">
+      <span class="modal-title" id="book-modal-title">Add Book</span>
+      <button class="close-btn" onclick="closeAllModals()">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Book ID</label><input id="bm-id" placeholder="B013"/></div>
+      <div class="form-group"><label>Quantity</label><input id="bm-qty" type="number" min="1" value="1"/></div>
+    </div>
+    <div class="form-group"><label>Title</label><input id="bm-title" placeholder="Book title"/></div>
+    <div class="form-group"><label>Author</label><input id="bm-author" placeholder="Author name"/></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Subject</label>
+        <select id="bm-subject">
+          <option>Programming</option><option>Mathematics</option>
+          <option>Electronics</option><option>Mechanical</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Branch</label>
+        <select id="bm-branch">
+          <option>CSE</option><option>ECE</option><option>EEE</option>
+          <option>Mechanical</option><option>Civil</option><option>All</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Available</label><input id="bm-avail" type="number" min="0" value="1"/></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn btn-primary" onclick="saveBook()">Save Book</button>
+      <button class="btn btn-ghost" onclick="closeAllModals()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- QR Modal -->
+  <div class="modal" id="qr-modal">
+    <div class="modal-hdr">
+      <span class="modal-title" id="qr-modal-title">QR Code</span>
+      <button class="close-btn" onclick="closeAllModals()">✕</button>
+    </div>
+    <div style="text-align:center;padding:20px 0">
+      <canvas id="qr-canvas" width="180" height="180" style="border-radius:10px"></canvas>
+      <div style="margin-top:14px;font-weight:700" id="qr-modal-name"></div>
+      <div style="font-family:var(--mono);font-size:12px;color:var(--accent);margin-top:4px" id="qr-modal-id"></div>
+    </div>
+  </div>
+
+  <!-- Extension Modal -->
+  <div class="modal" id="ext-modal">
+    <div class="modal-hdr">
+      <span class="modal-title">Request Deadline Extension</span>
+      <button class="close-btn" onclick="closeAllModals()">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Extra Days Needed</label>
+      <select id="ext-days"><option value="3">3 days</option><option value="7" selected>7 days</option><option value="14">14 days</option></select>
+    </div>
+    <div class="form-group" style="margin-top:12px">
+      <label>Reason</label>
+      <textarea id="ext-reason" rows="3" placeholder="Briefly explain why you need an extension..."></textarea>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn btn-primary" onclick="submitExtension()">Submit Request</button>
+      <button class="btn btn-ghost" onclick="closeAllModals()">Cancel</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/qr.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
